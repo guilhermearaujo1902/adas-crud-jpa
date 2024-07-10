@@ -52,6 +52,13 @@ public class ProdutoController {
     public ResponseEntity<String> vender(@RequestBody Produto produto,
             @PathVariable int quantidade,
             @PathVariable int idCaixa) {
+
+        // Verificar se o caixa está ativo
+        Caixa caixa = caixaService.findById(idCaixa);
+        if (!caixa.isStatus()) {
+            return ResponseEntity.ok("O caixa de código "+ idCaixa + " está fechado! Nâo é possível realizar venda.");
+        }
+
         // Busca o objeto atualizado no banco de dados com base no id informado no corpo da requisição
         Produto produtoAtual = produtoService.findById(produto.getId());
 
@@ -68,7 +75,7 @@ public class ProdutoController {
         Double totalVenda = quantidade * produtoAtual.getPreco();
 
         // Atualizar o saldo do caixa
-        Caixa caixa = caixaService.realizarMovimentacao(idCaixa, totalVenda, "ENTRADA");
+        caixa = caixaService.realizarMovimentacao(idCaixa, totalVenda, "ENTRADA");
 
         // Concatenando os valores para montar um recibo da movimentação, tanto no produto quanto no caixa
         String recibo = " " +
@@ -78,6 +85,40 @@ public class ProdutoController {
                 "\nSaldo atual do caixa: R$ " + caixa.getSaldo();
 
         return ResponseEntity.ok(recibo);
+    }
+
+    @PutMapping("/comprar/{quantidade}/{idCaixa}")
+    public ResponseEntity<String> comprar(@RequestBody Produto produto,
+                                         @PathVariable int quantidade,
+                                         @PathVariable int idCaixa) {
+
+        Caixa caixa = caixaService.findById(idCaixa);
+        if (!caixa.isStatus()) {
+            return ResponseEntity.ok("O caixa de código "+ idCaixa + " está fechado! Nâo é possível realizar compra.");
+        }
+
+        Produto produtoAtual = produtoService.findById(produto.getId());
+
+        Double totalCompra = quantidade * produtoAtual.getPreco();
+
+        // Verificar se existe saldo disponível no caixa para realizar a compra
+        if (caixa.getSaldo() < totalCompra) {
+            return ResponseEntity.ok("Saldo insulficiente para realizar a compra!");
+        }
+
+        produtoAtual.setQuantidade(produtoAtual.getQuantidade() + quantidade);
+        produtoService.save(produtoAtual);
+
+        caixa = caixaService.realizarMovimentacao(idCaixa, totalCompra, "SAIDA");
+
+        String recibo = " " +
+                "Produto comprado: " + produtoAtual.getNome() +
+                "\nTotal da compra: R$ " + totalCompra +
+                "\nCaixa atualizado: " + idCaixa +
+                "\nSaldo atual do caixa: R$ " + caixa.getSaldo();
+
+        return ResponseEntity.ok(recibo);
+
     }
 
     @DeleteMapping("/{id}")
