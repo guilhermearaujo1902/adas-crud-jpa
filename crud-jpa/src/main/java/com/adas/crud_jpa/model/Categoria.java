@@ -1,12 +1,12 @@
 package com.adas.crud_jpa.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.annotation.Nonnull;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 // Define automaticamente o construtor vazio
 @NoArgsConstructor
@@ -34,5 +34,11 @@ public class Categoria {
     private String nome;
 
     private boolean status;
+
+    // Vinculando um único registro da tabela Categoria com vários registros
+    // da tabela Produto
+    @JsonIgnore
+    @OneToMany(mappedBy = "categoria")
+    private List<Produto> produtos;
 
 }
