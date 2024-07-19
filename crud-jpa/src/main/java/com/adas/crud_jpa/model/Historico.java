@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -17,7 +17,7 @@ public class Historico {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    private Date dataTransacao;
+    private LocalDateTime dataTransacao;
 
     // Campo que irá receber a chave primária da tabela 'Cliente' como chave estrangeira
     // na tabela 'Historico'.
