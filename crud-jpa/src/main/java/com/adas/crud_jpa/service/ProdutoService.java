@@ -29,4 +29,16 @@ public class ProdutoService {
         produtoRepository.delete(produto);
     }
 
+    public List<Produto> buscarPorNomeExato(String nomeExato) {
+        return produtoRepository.buscarPorNomeExato(nomeExato);
+    }
+
+    public List<Produto> buscarPorNomeSimilar(String nomeSimilar) {
+        return produtoRepository.buscarPorNomeSimilar(nomeSimilar);
+    }
+
+    public List<Produto> buscarPorPrecoMaiorQue(Double preco) {
+        return produtoRepository.buscarPorPrecoMaiorQue(preco);
+    }
+
 }
