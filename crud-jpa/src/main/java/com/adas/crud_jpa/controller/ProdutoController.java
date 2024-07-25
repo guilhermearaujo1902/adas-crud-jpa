@@ -1,8 +1,10 @@
 package com.adas.crud_jpa.controller;
 
 import com.adas.crud_jpa.model.Caixa;
+import com.adas.crud_jpa.model.Categoria;
 import com.adas.crud_jpa.model.Produto;
 import com.adas.crud_jpa.service.CaixaService;
+import com.adas.crud_jpa.service.CategoriaService;
 import com.adas.crud_jpa.service.ProdutoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,9 @@ public class ProdutoController {
 
     @Autowired
     private CaixaService caixaService;
+
+    @Autowired
+    private CategoriaService categoriaService;
     
     @GetMapping
     public ResponseEntity<List<Produto>> findAll() {
@@ -54,9 +59,23 @@ public class ProdutoController {
         return ResponseEntity.ok(produtoService.buscarPorCodigoCategoria(codigo));
     }
 
+    @GetMapping("/categoria/ativa/{codigo}")
+    public ResponseEntity<?> buscarPorCategoriaAtiva(@PathVariable Integer codigo) {
+        Categoria categoria = categoriaService.buscarPorId(codigo);
 
-    // CRIAR UM ENDPOINT QUE SEJA CAPAZ DE BUSCAR PRODUTO POR CATEGORIA, DESDE QUE ESTEJA ATIVA
+        // Validando se a categoria não existe no banco de dados
+        if (categoria == null) {
+            return ResponseEntity.status(500).body("Categoria não encotrada para o código: " + codigo);
+        }
 
+        // Validando se o status da categoria é false
+        if (!categoria.isStatus()) {
+            return ResponseEntity.status(500).body("Categoria " + categoria.getNome() + " está inativa!");
+        }
+
+        // Retornar a lista de produtos pela categoria ativa
+        return ResponseEntity.ok(produtoService.buscarPorCodigoCategoria(codigo));
+    }
 
     @PostMapping
     public ResponseEntity<Produto> add(@RequestBody Produto novaProduto) {
