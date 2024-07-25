@@ -41,4 +41,8 @@ public class ProdutoService {
         return produtoRepository.buscarPorPrecoMaiorQue(preco);
     }
 
+    public List<Produto> buscarPorCodigoCategoria(Integer idCategoria) {
+        return produtoRepository.buscarPorCodigoCategoria(idCategoria);
+    }
+
 }

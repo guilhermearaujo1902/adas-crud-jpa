@@ -49,7 +49,14 @@ public class ProdutoController {
         return ResponseEntity.ok(produtoService.buscarPorPrecoMaiorQue(valor));
     }
 
-    // CRIAR ENDPOINT PARA BUSCAR POR CATEGORIA (APENAS O CÓDIGO)
+    @GetMapping("/categoria/{codigo}")
+    public ResponseEntity<List<Produto>> buscarPorCodigoCategoria(@PathVariable Integer codigo) {
+        return ResponseEntity.ok(produtoService.buscarPorCodigoCategoria(codigo));
+    }
+
+
+    // CRIAR UM ENDPOINT QUE SEJA CAPAZ DE BUSCAR PRODUTO POR CATEGORIA, DESDE QUE ESTEJA ATIVA
+
 
     @PostMapping
     public ResponseEntity<Produto> add(@RequestBody Produto novaProduto) {
