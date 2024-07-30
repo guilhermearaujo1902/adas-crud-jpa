@@ -16,6 +16,9 @@ public class HistoricoService {
     @Autowired
     private HistoricoRepository historicoRepository;
 
+    @Autowired
+    private ClienteService clienteService;
+
     public List<Historico> findAll() {
         return historicoRepository.findAll();
     }
@@ -35,10 +38,7 @@ public class HistoricoService {
     public void registrarVenda(Integer idCliente, List<Produto> produtos) {
 
         // Declarando um objeto da classe Cliente e passando valor para o atributo id
-        Cliente cliente = Cliente
-                .builder()
-                .id(idCliente)
-                .build();
+        Cliente cliente = clienteService.findById(idCliente);
 
         // Forma padrão de declarar objetos no Java
 //        Cliente cliente2 = new Cliente();

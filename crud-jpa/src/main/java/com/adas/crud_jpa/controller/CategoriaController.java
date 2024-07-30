@@ -29,6 +29,11 @@ public class CategoriaController {
         return ResponseEntity.ok(categoriaEncontrada);
     }
 
+    @GetMapping("/idmaior/{id}")
+    public List<Categoria> findByIdGreaterThanEqual(@PathVariable int id) {
+        return categoriaService.findByIdGreaterThanEqual(id);
+    }
+
     @PostMapping
     public ResponseEntity<Categoria> cadastrar(@RequestBody Categoria novaCategoria) {
         return ResponseEntity.ok(categoriaService.salvar(novaCategoria));
