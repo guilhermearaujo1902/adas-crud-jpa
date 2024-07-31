@@ -45,4 +45,8 @@ public class ProdutoService {
         return produtoRepository.buscarPorCodigoCategoria(idCategoria);
     }
 
+    public List<Produto> findProdutosByCategoriaNome(String categoriaNome) {
+        return produtoRepository.findProdutosByCategoriaNome(categoriaNome);
+    }
+
 }

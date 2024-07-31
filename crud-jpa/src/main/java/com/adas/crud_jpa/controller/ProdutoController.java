@@ -84,6 +84,11 @@ public class ProdutoController {
         return ResponseEntity.ok(produtoService.buscarPorCodigoCategoria(codigo));
     }
 
+    @GetMapping("/categoria/nome/{nome}")
+    public ResponseEntity<List<Produto>> findProdutosByCategoriaNome(@PathVariable String nome) {
+        return ResponseEntity.ok(produtoService.findProdutosByCategoriaNome(nome));
+    }
+
     @PostMapping
     public ResponseEntity<Produto> add(@RequestBody Produto novaProduto) {
         return ResponseEntity.ok(produtoService.save(novaProduto));
